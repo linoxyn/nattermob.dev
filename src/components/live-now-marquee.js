@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react"
+import { Fragment } from "react"
 
 const makeRandomColor = () => {
   const hex = Math.floor(Math.random() * 0xffffff)
@@ -10,7 +11,7 @@ const makeLettersArray = (text) => {
 }
 
 const LiveNowMarquee = () => {
-  const colorString = "LIVE NOW | https://www.youtube.com/raaecodes"
+  const message = "LIVE NOW | https://www.youtube.com/raaecodes"
   const [isMounted, setIsMounted] = useState(false)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const [color, setColor] = useState("#32ee7f")
@@ -26,7 +27,7 @@ const LiveNowMarquee = () => {
   }, [])
 
   useEffect(() => {
-    const lettersArray = makeLettersArray(colorString)
+    const lettersArray = makeLettersArray(message)
     const colorsArray = lettersArray.map(makeRandomColor)
     setLettersArray(lettersArray)
     setColorsArray(colorsArray)
@@ -58,7 +59,7 @@ const LiveNowMarquee = () => {
   }, [isMounted])
 
   return (
-    <>
+    <Fragment>
       {isMounted ? (
         <a
           href="https://www.youtube.com/raaecodes"
@@ -90,23 +91,27 @@ const LiveNowMarquee = () => {
               aria-label="Red Circle"
               role="img"
             />
-            <marquee
-              style={{
-                fontWeight: 600,
-                fontSize: "1.36rem",
-              }}
-            >
-              {lettersArray.map((letter, i) => (
-                <span style={{ color: colorsArray[i] }} key={`letter${i}`}>
-                  {letter}
-                </span>
-              ))}
-            </marquee>
+
+            {prefersReducedMotion ? (
+              <span>{message}</span>
+            ) : (
+              <marquee
+                style={{
+                  fontWeight: 600,
+                  fontSize: "1.36rem",
+                }}
+              >
+                {lettersArray.map((letter, i) => (
+                  <span style={{ color: colorsArray[i] }} key={`letter${i}`}>
+                    {letter}
+                  </span>
+                ))}
+              </marquee>
+            )}
           </div>
-          <p>{prefersReducedMotion}</p>
         </a>
       ) : null}
-    </>
+    </Fragment>
   )
 }
 
