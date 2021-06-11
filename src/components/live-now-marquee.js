@@ -49,24 +49,23 @@ const LiveNowMarquee = () => {
   }, [])
 
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
-  useEffect(() => {
-    const reduceQuery = window.matchMedia('(prefers-reduced-motion:reduce)')
-    const handleChange = event => {
-      setPrefersReducedMotion(!event.matches)
+    const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const handleChange = () => {
+      setPrefersReducedMotion(reduceQuery.matches)
     }
     reduceQuery.addEventListener('change', handleChange)
-
     return () => {
       reduceQuery.removeEventListener('change', handleChange)
     }
   }, [isMounted])
+  
+  useEffect(() => {
+      setIsMounted(true)
+  }, [])
 
   return (
     <>
-      {isMounted ? (
+      {isMounted && !prefersReducedMotion ? (
         <a
           href="https://www.youtube.com/raaecodes"
           rel="noreferrer"
