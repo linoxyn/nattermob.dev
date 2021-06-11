@@ -16,26 +16,14 @@ const LiveNowMarquee = () => {
   const [color, setColor] = useState("#32ee7f")
   const [lettersArray, setLettersArray] = useState([])
   const [colorsArray, setColorsArray] = useState([])
-  const [marqueeColors, setMarqueeColors] = useState([])
-
-  const changeUpColors = useCallback(
-    (madeColor) => {
-      if (lettersArray) {
-        colorsArray.splice(0, 0, madeColor)
-        colorsArray.splice(-1, 1)
-        const allNewColors = [...colorsArray]
-        setMarqueeColors(allNewColors)
-      }
-    },
-    [colorsArray, lettersArray]
-  )
 
   const makeColor = useCallback(() => {
     const madeColor = makeRandomColor()
     setColor(madeColor)
-    changeUpColors(madeColor)
-    return madeColor
-  }, [changeUpColors])
+    setColorsArray((oldArray) => {
+      return [madeColor, ...oldArray]
+    })
+  }, [])
 
   useEffect(() => {
     const lettersArray = makeLettersArray(colorString)
@@ -109,7 +97,7 @@ const LiveNowMarquee = () => {
               }}
             >
               {lettersArray.map((letter, i) => (
-                <span style={{ color: marqueeColors[i] }} key={`letter${i}`}>
+                <span style={{ color: colorsArray[i] }} key={`letter${i}`}>
                   {letter}
                 </span>
               ))}
