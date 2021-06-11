@@ -5,6 +5,10 @@ const makeRandomColor = () => {
   return `#${`000000${hex.toString(16)}`.substr(-6)}`
 }
 
+const makeLettersArray = (text) => {
+  return text.split("")
+}
+
 const LiveNowMarquee = () => {
   const colorString = "LIVE NOW | https://www.youtube.com/raaecodes"
   const [isMounted, setIsMounted] = useState(false)
@@ -33,21 +37,12 @@ const LiveNowMarquee = () => {
     return madeColor
   }, [changeUpColors])
 
-  const makeNewArray = useCallback(
-    (stringArray) => {
-      const colorArray = [...new Array(stringArray.length)]
-      const listColors = colorArray.map(makeColor)
-      setColorsArray(listColors)
-    },
-    [makeColor]
-  )
-
   useEffect(() => {
-    const stringArray = colorString.split("")
-    makeNewArray(stringArray)
-    const letters = [...stringArray]
-    setLettersArray(letters)
-  }, [makeNewArray])
+    const lettersArray = makeLettersArray(colorString)
+    const colorsArray = lettersArray.map(makeRandomColor)
+    setLettersArray(lettersArray)
+    setColorsArray(colorsArray)
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
