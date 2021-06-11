@@ -49,7 +49,7 @@ const LiveNowMarquee = () => {
   useEffect(() => {
     const reduceQuery = window.matchMedia("(prefers-reduced-motion:reduce)")
     const handleChange = (event) => {
-      setPrefersReducedMotion(!event.matches)
+      setPrefersReducedMotion(event.matches)
     }
     reduceQuery.addEventListener("change", handleChange)
 
