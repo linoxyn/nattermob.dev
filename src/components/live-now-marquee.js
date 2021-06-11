@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 const LiveNowMarquee = () => {
   const colorString = 'LIVE NOW | https://www.youtube.com/raaecodes'
@@ -9,35 +9,41 @@ const LiveNowMarquee = () => {
   const [colorsArray, setColorsArray] = useState([])
   const [marqueeColors, setMarqueeColors] = useState([])
 
-  const changeUpColors = madeColor => {
-    if (lettersArray) {
-      colorsArray.splice(0, 0, madeColor)
-      colorsArray.splice(-1, 1)
-      const allNewColors = [...colorsArray]
-      setMarqueeColors(allNewColors)
-    }
-  }
+  const changeUpColors = useCallback(
+    (madeColor) => {
+      if (lettersArray) {
+        colorsArray.splice(0, 0, madeColor)
+        colorsArray.splice(-1, 1)
+        const allNewColors = [...colorsArray]
+        setMarqueeColors(allNewColors)
+      }
+    },
+    [colorsArray, lettersArray]
+  )
 
-  const makeColor = () => {
+  const makeColor = useCallback(() => {
     const hex = Math.floor(Math.random() * 0xffffff)
     const madeColor = `#${`000000${hex.toString(16)}`.substr(-6)}`
     setColor(madeColor)
     changeUpColors(madeColor)
     return madeColor
-  }
+  }, [changeUpColors])
 
-  const makeNewArray = stringArray => {
-    const colorArray = [...new Array(stringArray.length)]
-    const listColors = colorArray.map(makeColor)
-    setColorsArray(listColors)
-  }
+  const makeNewArray = useCallback(
+    (stringArray) => {
+      const colorArray = [...new Array(stringArray.length)]
+      const listColors = colorArray.map(makeColor)
+      setColorsArray(listColors)
+    },
+    []
+  )
 
   useEffect(() => {
     const stringArray = colorString.split('')
     makeNewArray(stringArray)
     const letters = [...stringArray]
     setLettersArray(letters)
-  }, [])
+  }, [makeNewArray])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -46,7 +52,7 @@ const LiveNowMarquee = () => {
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [makeColor])
 
   useEffect(() => {
     const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -109,7 +115,6 @@ const LiveNowMarquee = () => {
               ))}
             </marquee>
           </div>
-          <p>{prefersReducedMotion}</p>
         </a>
       ) : null}
     </>
