@@ -1,5 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react"
 
+const makeRandomColor = () => {
+  const hex = Math.floor(Math.random() * 0xffffff)
+  return `#${`000000${hex.toString(16)}`.substr(-6)}`
+}
+
 const LiveNowMarquee = () => {
   const colorString = "LIVE NOW | https://www.youtube.com/raaecodes"
   const [isMounted, setIsMounted] = useState(false)
@@ -22,8 +27,7 @@ const LiveNowMarquee = () => {
   )
 
   const makeColor = useCallback(() => {
-    const hex = Math.floor(Math.random() * 0xffffff)
-    const madeColor = `#${`000000${hex.toString(16)}`.substr(-6)}`
+    const madeColor = makeRandomColor()
     setColor(madeColor)
     changeUpColors(madeColor)
     return madeColor
